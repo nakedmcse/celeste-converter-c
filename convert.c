@@ -126,6 +126,24 @@ unsigned char *readFile(char *path) {
     return data;
 }
 
+bool writeFile(char *path, unsigned char *data, size_t length) {
+    FILE *file = fopen(path, "wb");
+    if (file == NULL) {
+        printf("Failed to open file for writing");
+        return false;
+    }
+
+    size_t written = fwrite(data, 1, length, file);
+    if (written != length) {
+        printf("Failed to write all bytes");
+        fclose(file);
+        return false;
+    }
+
+    fclose(file);
+    return true;
+}
+
 char* getFilename(char* path) {
     char *slash1 = strrchr(path, '/');
     char *slash2 = strrchr(path, '\\');
@@ -287,7 +305,6 @@ void png2data(char *input, char *output, bool targetIsFolder) {
     memcpy(outputData+4, &height, sizeof(uint32_t));
     outputData[8] = hasAlpha;
 
-    // Write data to disk
     uint32_t index = 0;
     uint32_t offset = 9;
     while (index < width * height) {
@@ -300,8 +317,8 @@ void png2data(char *input, char *output, bool targetIsFolder) {
         uint8_t a = hasAlpha ? getPixelChannel(image, x, y, width, 3, hasAlpha) : 0;
 
         // Look ahead at next 255 pixels for RLE
-        uint32_t count = 1;
-        while (count < 255) {
+        uint8_t count = 1;
+        while (true) {
             if (index + count > width * height) break;  // out of bounds
             uint32_t x2 = (index + count) % width;
             uint32_t y2 = (index + count) / width;
@@ -310,11 +327,44 @@ void png2data(char *input, char *output, bool targetIsFolder) {
             uint8_t b2 = getPixelChannel(image, x2, y2, width, 2, hasAlpha);
             uint8_t a2 = hasAlpha ? getPixelChannel(image, x2, y2, width, 3, hasAlpha) : 0;
             if (r != r2 || g != g2 || b != b2 || a != a2) break;  // hit end of color run
+            if (count == 255) break;  // hit max RLE
             count++;
         }
+
+        // Write RLE count and channel values
+        outputData[offset++] = count;
+        if (hasAlpha) {
+            outputData[offset++] = a;
+            outputData[offset++] = b;
+            outputData[offset++] = g;
+            outputData[offset++] = r;
+        }
+        else {
+            outputData[offset++] = b;
+            outputData[offset++] = g;
+            outputData[offset++] = r;
+        }
+
+        index += count;
     }
 
+    // Write Data to Disk
+    char *inputFileName = getFilename(input);
+    setExtension(inputFileName, "data");
+    char *outputFileName = malloc(strlen(output)+strlen(inputFileName)+3);
+    strncpy(outputFileName, output, strlen(output));
+    if (targetIsFolder) {
+    #ifdef _WIN32
+        outputFileName = strcat(outputFileName, "\\");
+    #else
+        outputFileName = strcat(outputFileName, "/");
+    #endif
+        outputFileName = strcat(outputFileName, inputFileName);
+    }
+    writeFile(outputFileName, outputData, offset);
+
     // Free png and data
+    free(outputFileName);
     free(outputData);
     lodepng_state_cleanup(&state);
     free(image);
