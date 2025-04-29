@@ -11,8 +11,7 @@ int main(int argc, char **argv) {
         return 0;
     }
 
-    if(strncmp(argv[1], "data2png", 8) == 0) data2png(argv[2], argv[3]);
-    else if(strncmp(argv[1], "png2data", 8) == 0) png2data(argv[2], argv[3]);
+    if(strncmp(argv[1], "data2png", 8) == 0 || strncmp(argv[1], "png2data", 8) == 0) convert(argv[2], argv[3], argv[1]);
     else printf("Unknown command %s\n", argv[1]);
     return 0;
 }
