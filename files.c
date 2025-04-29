@@ -106,7 +106,7 @@ unsigned char *readFile(char *path) {
 bool writeFile(char *path, unsigned char *data, size_t length) {
     FILE *file = fopen(path, "wb");
     if (file == NULL) {
-        printf("Failed to open file for writing");
+        printf("Failed to open file %s for writing\n", path);
         return false;
     }
 

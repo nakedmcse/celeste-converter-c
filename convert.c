@@ -141,7 +141,7 @@ void png2data(char *input, char *output, bool targetIsFolder) {
     printf("Width: %u, Height: %u, Alpha: %d\n", width, height, hasAlpha);
 
     // Allocate memory for data
-    unsigned char *outputData = malloc(width * height * 4);
+    unsigned char *outputData = malloc((width * height * 4)+10);
     if (!outputData) {
         printf("Failed to allocate output data\n");
         return;
@@ -199,7 +199,7 @@ void png2data(char *input, char *output, bool targetIsFolder) {
     char *inputFileName = getFilename(input);
     setExtension(inputFileName, "data");
     char *outputFileName = malloc(strlen(output)+strlen(inputFileName)+3);
-    strncpy(outputFileName, output, strlen(output));
+    strcpy(outputFileName, output);
     if (targetIsFolder) {
     #ifdef _WIN32
         outputFileName = strcat(outputFileName, "\\");
