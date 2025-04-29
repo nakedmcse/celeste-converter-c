@@ -196,7 +196,9 @@ void png2data(char *input, char *output, bool targetIsFolder) {
     }
 
     // Write Data to Disk
-    char *inputFileName = getFilename(input);
+    char *origFileName = getFilename(input);
+    char *inputFileName = malloc(strlen(origFileName)+2);
+    strcpy(inputFileName, origFileName);
     setExtension(inputFileName, "data");
     char *outputFileName = malloc(strlen(output)+strlen(inputFileName)+3);
     strcpy(outputFileName, output);
