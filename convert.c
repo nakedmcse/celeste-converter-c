@@ -115,6 +115,7 @@ void data2png(char *input, char *output, bool targetIsFolder) {
     lodepng_encode_file(outputFileName, outputPng, width, height, hasAlpha ? LCT_RGBA : LCT_RGB, 8);
 
     // Free png and data
+    free(outputFileName);
     free(inputFile);
     free(outputPng);
 }
@@ -182,9 +183,11 @@ void png2data(char *input, char *output, bool targetIsFolder) {
         outputData[offset++] = count;
         if (hasAlpha) {
             outputData[offset++] = a;
-            outputData[offset++] = b;
-            outputData[offset++] = g;
-            outputData[offset++] = r;
+            if (a != 0) {
+                outputData[offset++] = b;
+                outputData[offset++] = g;
+                outputData[offset++] = r;
+            }
         }
         else {
             outputData[offset++] = b;

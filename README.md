@@ -4,7 +4,7 @@ A C implementation of a tool for converting between Celeste game assets (DATA fo
 
 ## Overview
 
-This tool allows you to convert between Celeste's proprietary DATA format and standard PNG images. It's a C port of the original [Kotlin-based celeste-converter](https://github.com/borogk/celeste-converter).
+This tool allows you to convert between Celeste's proprietary DATA format and standard PNG images. It's a C port of the original [Rust-based celeste-converter](https://github.com/borogk/celeste-converter).
 
 ## Features
 
