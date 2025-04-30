@@ -45,11 +45,18 @@ celeste-converter -v data2png ./assets ./output
 
 ## Building from Source
 
+For Mac or Linux build, you will need gcc and make installed.
+
+For Windows, you will need the [Microsoft VC build tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
+
 ```sh
 # Clone the repository
 git clone https://github.com/nakedmcse/celeste-converter-c.git
 cd celeste-converter-c
 
-# Build the project
+# Build the project (Linux/Mac)
 make all
+
+# Build the project (Windows, from Build Tools Command Prompt)
+cl /O2 /Fe:celeste-converter.exe celeste-converter.c files.c lodepng.c convert.c
 ```
