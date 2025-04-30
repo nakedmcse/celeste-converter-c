@@ -23,14 +23,24 @@ Available commands:
 - `data2png`: Convert DATA files to PNG images
 - `png2data`: Convert PNG images to DATA files
 
+Options:
+- `-h`: Show help text
+- `-v`: Enable verbose logging
+
 ### Examples
 
 ```sh
 # Convert all .data files in the "assets" directory to PNG files in the "output" directory
 celeste-converter data2png ./assets ./output
 
+# Convert all PNG files back to DATA format
+celeste-converter png2data ./modified_assets ./output
+
 # Convert multi.data to multi-mod.png
 celeste-converter data2png multi.data multi-mod.png
+
+# Convert with verbose logging
+celeste-converter -v data2png ./assets ./output
 ```
 
 ## Building from Source

@@ -13,7 +13,7 @@ uint8_t getPixelChannel(unsigned char *png, uint32_t x, uint32_t y, uint32_t wid
     return png[offset+channel];
 }
 
-void convert(char *input, char *output, char *direction) {
+void convert(char *input, char *output, char *direction, bool verbose) {
     StringArray workfiles;
     workfiles.count = 0;
     workfiles.capacity = 0;
@@ -28,14 +28,14 @@ void convert(char *input, char *output, char *direction) {
     }
 
     for (int i = 0; i < workfiles.count; i++) {
-        if (strncmp(direction, "data2png", 8) == 0) data2png(workfiles.strings[i], output, targetIsFolder);
-        else png2data(workfiles.strings[i], output, targetIsFolder);
+        if (strncmp(direction, "data2png", 8) == 0) data2png(workfiles.strings[i], output, targetIsFolder, verbose);
+        else png2data(workfiles.strings[i], output, targetIsFolder, verbose);
     }
 }
 
-void data2png(char *input, char *output, bool targetIsFolder) {
+void data2png(char *input, char *output, bool targetIsFolder, bool verbose) {
     // Implement data to png
-    printf("Converting %s to %s%s\n", input, output, targetIsFolder ? " (folder)" : "");
+    if (verbose) printf("Converting %s to %s%s\n", input, output, targetIsFolder ? " (folder)" : "");
 
     // Read data file into memory
     unsigned char *inputFile = readFile(input);
@@ -45,7 +45,7 @@ void data2png(char *input, char *output, bool targetIsFolder) {
     uint32_t height;
     memcpy(&height, inputFile + 4, sizeof(uint32_t));
     bool hasAlpha = (inputFile[8] != 0);
-    printf("Width: %u, Height: %u, Alpha: %d\n", width, height, hasAlpha);
+    if (verbose) printf("Width: %u, Height: %u, Alpha: %d\n", width, height, hasAlpha);
 
     // Allocate memory for png
     unsigned char *outputPng = malloc(width * height * 4);
@@ -120,9 +120,9 @@ void data2png(char *input, char *output, bool targetIsFolder) {
     free(outputPng);
 }
 
-void png2data(char *input, char *output, bool targetIsFolder) {
+void png2data(char *input, char *output, bool targetIsFolder, bool verbose) {
     // Implement png to data
-    printf("Converting %s to %s%s\n", input, output, targetIsFolder ? " (folder)" : "");
+    if (verbose) printf("Converting %s to %s%s\n", input, output, targetIsFolder ? " (folder)" : "");
 
     // Read png file into memory
     unsigned char* image = 0;
@@ -139,7 +139,7 @@ void png2data(char *input, char *output, bool targetIsFolder) {
         return;
     }
     bool hasAlpha = lodepng_is_alpha_type(&state.info_png.color);
-    printf("Width: %u, Height: %u, Alpha: %d\n", width, height, hasAlpha);
+    if (verbose) printf("Width: %u, Height: %u, Alpha: %d\n", width, height, hasAlpha);
 
     // Allocate memory for data
     unsigned char *outputData = malloc((width * height * 4)+10);
