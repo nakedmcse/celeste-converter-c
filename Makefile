@@ -1,15 +1,10 @@
 all: lodepng converter
 
-all-multi: lodepng converter-multi
-
 lodepng: lodepng.c
 	gcc -O3 -c lodepng.c
 
 converter: lodepng.o lodepng.h celeste-converter.c
 	gcc -O3 -o celeste-converter celeste-converter.c convert.c files.c lodepng.o
-
-converter-multi: lodepng.o lodepng.h celeste-converter.c
-	gcc -O3 -o celeste-converter celeste-converter.c convert.c files.c lodepng.o -fopenmp
 
 clean:
 	rm -f *.o
