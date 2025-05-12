@@ -8,8 +8,8 @@
 #include "files.h"
 
 // Convert functions
-uint8_t getPixelChannel(unsigned char *png, uint32_t x, uint32_t y, uint32_t width, uint32_t channel, bool hasAlphe) {
-    uint32_t bytesPerPixel = hasAlphe ? 4 : 3;
+uint8_t getPixelChannel(unsigned char *png, uint32_t x, uint32_t y, uint32_t width, uint32_t channel, bool hasAlpha) {
+    uint32_t bytesPerPixel = hasAlpha ? 4 : 3;
     uint32_t offset = ((y * width) + x) * bytesPerPixel;
     return png[offset+channel];
 }
